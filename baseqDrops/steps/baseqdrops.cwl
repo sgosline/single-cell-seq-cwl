@@ -9,10 +9,11 @@ doc: process fastq files from 10X, indrop and Drop-seq
 baseCommand: run-pipe
 
 requirements:
+- class: InlineJavascriptRequirement
 - class: InitialWorkDirRequirement
   listing: 
       - entry: "$({class:'Directory',listing:[]})"
-        entryname: $(input.index_dir)
+        entryname: $(inputs.index_dir)
 
 hints:
   DockerRequirement:
@@ -22,7 +23,7 @@ inputs:
   - id: index_dir
     type: Directory
 
-  - id: out_dir #figure out whether it's a dir or str
+  - id: out_dir
     type: Directory
     inputBinding:
        prefix: --outdir
@@ -32,7 +33,7 @@ inputs:
     inputBinding:
        prefix: --config
   
-  - id: reference_geome
+  - id: reference_genome
     type: string
     inputBinding:
        prefix: --genome
@@ -40,12 +41,7 @@ inputs:
   - id: protocol
     type: string
     inputBinding:
-       prefix: --protocol
-  
-  - id: minreads
-    type: int
-    inputBinding: 
-       prefix: --minreads
+       prefix: --protocol  
       
   - id: sample_name # specimenID in annotation
     type: string
@@ -62,14 +58,9 @@ inputs:
     inputBinding:
        prefix: --fq2 
   
-  - id: top_million_reads
-    type: int
-    inputBinding:
-       prefix: --top_million_reads
-
 outputs:
    - id: basedrops_dir
-     label: baseqDrops output folder
+     doc: baseqDrops output folder
      type: Directory
      outputBinding: 
-        glob: "$(inputs.out_dir+inputs.sample_name)"
+        glob: "$(inputs.out_dir.location+inputs.sample_name)"
