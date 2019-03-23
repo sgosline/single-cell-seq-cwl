@@ -8,13 +8,24 @@ doc: process fastq files from 10X, indrop and Drop-seq
 
 baseCommand: run-pipe
 
-requirements:
-- class: InlineJavascriptRequirement
-- class: InitialWorkDirRequirement
-  listing: 
-      - entry: "$({class:'Directory',listing:[]})"
-        entryname: $(inputs.index_dir)
+arguments:
 
+- --config
+- config_drops.ini
+
+
+
+requirements:
+  - class: InlineJavascriptRequirement
+  - class: InitialWorkDirRequirement
+    listing:
+      - entryname: config_drops.ini
+        entry: |
+          [Drops]
+          samtools = samtools
+          star = STAR
+          whitelistDir = /usr/app/baseqDrops/whitelist
+          cellranger_ref_hg38 = $(inputs.index_dir.path)
 hints:
   DockerRequirement:
     dockerPull: guoxindi/baseqdrops
@@ -24,22 +35,19 @@ inputs:
     type: Directory
 
   - id: out_dir
-    type: Directory
+    type: Directory?
     inputBinding:
        prefix: --outdir
-
-  - id: baseqdrops_config_file
-    type: File
-    inputBinding:
-       prefix: --config
   
   - id: reference_genome
     type: string
+    default: "hg38"
     inputBinding:
        prefix: --genome
   
   - id: protocol
     type: string
+    default: "10X"
     inputBinding:
        prefix: --protocol  
       
@@ -59,8 +67,9 @@ inputs:
        prefix: --fq2 
   
 outputs:
+
    - id: basedrops_dir
      doc: baseqDrops output folder
      type: Directory
      outputBinding: 
-        glob: "$(inputs.out_dir.location+inputs.sample_name)"
+        glob: "test"
