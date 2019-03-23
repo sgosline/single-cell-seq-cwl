@@ -33,24 +33,7 @@ hints:
 inputs:
   - id: index_dir
     type: Directory
-
-  - id: out_dir
-    type: Directory?
-    inputBinding:
-       prefix: --outdir
-  
-  - id: reference_genome
-    type: string
-    default: "hg38"
-    inputBinding:
-       prefix: --genome
-  
-  - id: protocol
-    type: string
-    default: "10X"
-    inputBinding:
-       prefix: --protocol  
-      
+        
   - id: sample_name # specimenID in annotation
     type: string
     inputBinding:
@@ -65,6 +48,18 @@ inputs:
     type: File
     inputBinding:
        prefix: --fq2 
+
+  - id: reference_genome
+    type: string
+    default: "hg38"
+    inputBinding:
+       prefix: --genome
+  
+  - id: protocol
+    type: string
+    default: "10X"
+    inputBinding:
+       prefix: --protocol  
   
 outputs:
 
@@ -72,4 +67,4 @@ outputs:
      doc: baseqDrops output folder
      type: Directory
      outputBinding: 
-        glob: "test"
+        glob: $(inputs.sample_name)
