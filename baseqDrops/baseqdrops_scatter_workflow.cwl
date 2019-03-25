@@ -6,9 +6,11 @@ class: Workflow
 
 inputs:
 
-  index_dir: Directory
   idquery: string
   synapse_config: File
+  index_id:
+    type: string
+    default: "syn18460306"
   reference_genome: string?
   protocol: string?
 
@@ -24,6 +26,19 @@ requirements:
   - class: ScatterFeatureRequirement
 
 steps:
+
+  download_index:
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/synapse-client-cwl-tools/master/synapse-get-tool.cwl
+    in:
+      synapseid: index_id
+      synapse_config: synapse_config
+    out: [filepath]  
+
+  untar_index:
+    run: steps/untar.cwl
+    in:
+      tar_file: download_index/filepath
+    out: [dir]
 
   get-fv:
     run: https://raw.githubusercontent.com/Sage-Bionetworks/synapse-client-cwl-tools/master/synapse-query-tool.cwl
@@ -41,7 +56,7 @@ steps:
   baseqdrop_workflow:
     run: steps/baseqdrops.cwl
     in:
-      index_dir: index_dir
+      index_dir: untar_index/dir
       sample_name: get-samples-from-fv/specIds
       fastq1: get-samples-from-fv/mate1files
       fastq2: get-samples-from-fv/mate2files
