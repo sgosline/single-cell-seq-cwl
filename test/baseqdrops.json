@@ -1,6 +1,6 @@
 {
-  "p1_fastq_id": "syn17022280",
-  "p2_fastq_id": "syn17022281",
+  "p1_fastq_id": "syn17022281",
+  "p2_fastq_id": "syn17022280",
   "sample_name": "test",
   "index_dir": {
   "class": "Directory",
