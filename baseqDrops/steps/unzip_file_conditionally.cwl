@@ -38,6 +38,8 @@ requirements:
                 os.system("gunzip " + name)
             elif re.search(".bz$", args.file):
                 os.system("bunzip " + name)
+            elif re.search(".bz2$", args.file):
+                os.system("bunzip2 " + name)
             else:
                 pass
 
@@ -54,5 +56,5 @@ outputs:
 - id: unziped_file
   type: File
   outputBinding: 
-    glob: $(inputs.file.basename.replace(".gz", "").replace(".bz", ""))
+    glob: $(inputs.file.basename.replace(".bz2$", "").replace(".gz$", "").replace(".bz$", ""))
 
