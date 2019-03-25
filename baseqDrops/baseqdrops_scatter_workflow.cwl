@@ -8,7 +8,6 @@ inputs:
 
   index_dir: Directory
   idquery: string
-  sample_name: string
   synapse_config: File
   reference_genome: string?
   protocol: string?
