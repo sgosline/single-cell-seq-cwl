@@ -6,9 +6,8 @@ class: Workflow
 
 inputs:
 
-  p1_fastq_id: string
-  p2_fastq_id: string
   index_dir: Directory
+  idquery: string
   sample_name: string
   synapse_config: File
   reference_genome: string?
@@ -17,60 +16,43 @@ inputs:
 outputs:
 
   baseq_dir: 
-    type: Directory
+    type: Directory[]
     outputSource: 
-    - baseqdrops/basedrops_dir
+    - baseqdrop_workflow/basedrops_dir
+
+requirements:
+  - class: SubworkflowFeatureRequirement
+  - class: ScatterFeatureRequirement
 
 steps:
 
-  download_index:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/synapse-client-cwl-tools/master/synapse-get-tool.cwl
+  get-fv:
+    run: https://raw.githubusercontent.com/Sage-Bionetworks/synapse-client-cwl-tools/master/synapse-query-tool.cwl
     in:
-      synapseid: index_id
       synapse_config: synapse_config
-    out: [filepath]  
+      query: idquery
+    out: [query_result]
 
-   untar_index:
-    run: steps/untar.cwl
+  get-samples-from-fv:
+    run: https://raw.githubusercontent.com/sgosline/NEXUS/master/bin/rna-seq-workflow/breakdownfile-tool.cwl
     in:
-      tar_file: download_index/filepath
-    out: [dir]
+       fileName: get-fv/query_result
+    out: [specIds,mate1files,mate2files]
 
-  download_p1_fastq:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/synapse-client-cwl-tools/master/synapse-get-tool.cwl
-    in:
-      synapseid: p1_fastq_id
-      synapse_config: synapse_config
-    out: [filepath]
-
-  download_p2_fastq:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/synapse-client-cwl-tools/master/synapse-get-tool.cwl
-    in:
-      synapseid: p2_fastq_id
-      synapse_config: synapse_config
-    out: [filepath]
-
-  unzip_p1_fastq:
-    run: steps/unzip_file_conditionally.cwl
-    in:
-      file: download_p1_fastq/filepath
-    out: [unziped_file]
-
-  unzip_p2_fastq:
-    run: steps/unzip_file_conditionally.cwl
-    in:
-      file: download_p2_fastq/filepath
-    out: [unziped_file]
-
-  baseqdrops:
+  baseqdrop_workflow:
     run: steps/baseqdrops.cwl
     in:
       index_dir: index_dir
-      sample_name: sample_name
-      fastq1: unzip_p1_fastq/unziped_file
-      fastq2: unzip_p2_fastq/unziped_file
+      sample_name: get-samples-from-fv/specIds
+      fastq1: get-samples-from-fv/mate1files
+      fastq2: get-samples-from-fv/mate2files
       reference_genome: reference_genome
       protocol: protocol
+    scatter:
+    - sample_name
+    - fastq1
+    - fastq2
+    scatterMethod: dotproduct 
     out: [basedrops_dir]
 
 
