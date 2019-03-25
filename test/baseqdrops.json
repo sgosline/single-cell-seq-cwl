@@ -1,10 +1,13 @@
 {
   "p1_fastq_id": "syn17022280",
   "p2_fastq_id": "syn17022281",
-  "index_id": "syn18460306",
   "sample_name": "test",
+  "index_dir": {
+  "class": "Directory",
+   "path": "/home/ubuntu/refdata-cellranger-GRCh38-3.0.0"
+  },
   "synapse_config": {
-    "class": File,
-    "path": ".synapseConfig"
+    "class": "File",
+    "path": "/home/ubuntu/.synapseConfig"
   }
 }

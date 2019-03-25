@@ -8,7 +8,7 @@ inputs:
 
   p1_fastq_id: string
   p2_fastq_id: string
-  index_id: string
+  index_dir: Directory
   sample_name: string
   synapse_config: File
   reference_genome: string?
@@ -37,13 +37,6 @@ steps:
       synapse_config: synapse_config
     out: [filepath]
 
-  download_index:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/synapse-client-cwl-tools/master/synapse-get-tool.cwl
-    in:
-      synapseid: index_id
-      synapse_config: synapse_config
-    out: [filepath]  
-
   unzip_p1_fastq:
     run: steps/unzip_file_conditionally.cwl
     in:
@@ -56,16 +49,10 @@ steps:
       file: download_p2_fastq/filepath
     out: [unziped_file]
 
-  untar_index:
-    run: steps/untar.cwl
-    in:
-      tar_file: download_index/filepath
-    out: [dir]
-
   baseqdrops:
     run: steps/baseqdrops.cwl
     in:
-      index_dir: untar_index/dir
+      index_dir: index_dir
       sample_name: sample_name
       fastq1: unzip_p1_fastq/unziped_file
       fastq2: unzip_p2_fastq/unziped_file
