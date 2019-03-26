@@ -9,7 +9,6 @@ doc: process fastq files from 10X, indrop and Drop-seq
 baseCommand: run-pipe
 
 arguments:
-
 - --config
 - config_drops.ini
 
@@ -31,40 +30,50 @@ hints:
     dockerPull: guoxindi/baseqdrops
 
 inputs:
-  - id: index_dir
-    type: Directory
+- id: index_dir
+  type: Directory
         
-  - id: sample_name # specimenID in annotation
-    type: string
-    inputBinding:
-       prefix: --name
+- id: sample_name # specimenID in annotation
+  type: string
+  inputBinding:
+     prefix: --name
   
-  - id: fastq1
-    type: File
-    inputBinding:
-       prefix: --fq1 
+- id: fastq1
+  type: File
+  inputBinding:
+    prefix: --fq1 
 
-  - id: fastq2
-    type: File
-    inputBinding:
-       prefix: --fq2 
+- id: fastq2
+  type: File
+  inputBinding:
+    prefix: --fq2 
 
-  - id: reference_genome
-    type: string
-    default: "hg38"
-    inputBinding:
-       prefix: --genome
+- id: reference_genome
+  type: string
+  default: "hg38"
+  inputBinding:
+    prefix: --genome
   
-  - id: protocol
-    type: string
-    default: "10X"
-    inputBinding:
-       prefix: --protocol  
+- id: protocol
+  type: string
+  default: "10X"
+  inputBinding:
+    prefix: --protocol  
   
 outputs:
 
-   - id: basedrops_dir
-     doc: baseqDrops output folder
-     type: Directory
-     outputBinding: 
-        glob: $(inputs.sample_name)
+- id: umi_file
+  type: File
+  outputBinding: 
+    glob: $(inputs.sample_name + "/Result.UMIs." + "test.txt")
+
+- id: reads_file
+  type: File
+  outputBinding: 
+    glob: $(inputs.sample_name + "/Result.Reads." + "test.txt")
+
+- id: basedrops_dir
+  doc: baseqDrops output folder
+  type: Directory
+  outputBinding: 
+    glob: $(inputs.sample_name)
