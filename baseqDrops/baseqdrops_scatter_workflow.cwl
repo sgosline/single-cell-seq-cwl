@@ -9,7 +9,6 @@ inputs:
   idquery: string
   sample_query: string
   synapse_config: File
-  index_dir: Directory
   index_id:
     type: string
     default: "syn18460306"
@@ -28,16 +27,26 @@ outputs:
   outputSource: 
   - baseqdrop_workflow/umi_file
 
-- id: res
-  type: File
-  outputSource: 
-  - get-clinical/query_result
-
 requirements:
   - class: SubworkflowFeatureRequirement
   - class: ScatterFeatureRequirement
 
 steps:
+
+- id: download_index
+  run: https://raw.githubusercontent.com/Sage-Bionetworks/synapse-client-cwl-tools/master/synapse-get-tool.cwl
+  in:
+    synapseid: index_id
+    synapse_config: synapse_config
+  out: 
+  - filepath  
+
+- id: untar_index
+  run: steps/untar.cwl
+  in:
+    tar_file: download_index/filepath
+  out: 
+  - dir
 
 - id: get-clinical
   run: https://raw.githubusercontent.com/Sage-Bionetworks/synapse-client-cwl-tools/master/synapse-query-tool.cwl
@@ -67,8 +76,7 @@ steps:
 - id: baseqdrop_workflow
   run: steps/baseqdrops.cwl
   in:
-    #index_dir: untar_index/dir
-    index_dir: index_dir
+    index_dir: untar_index/dir
     sample_name: get-samples-from-fv/specIds
     fastq1: get-samples-from-fv/mate1files
     fastq2: get-samples-from-fv/mate2files

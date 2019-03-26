@@ -4,9 +4,5 @@
   "synapse_config": {
     "class": "File",
     "path": "/home/ubuntu/.synapseConfig"
-  },
-  "index_dir": {
-    "class": "Directory",
-    "path": "/home/ubuntu/refdata-cellranger-GRCh38-3.0.0/"
   }
 }
