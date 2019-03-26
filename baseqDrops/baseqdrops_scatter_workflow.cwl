@@ -38,7 +38,7 @@ steps:
     out: [query_result]
 
   get-samples-from-fv:
-    run: https://raw.githubusercontent.com/sgosline/NEXUS/master/bin/rna-seq-workflow/breakdownfile-tool.cwl
+    run: https://raw.githubusercontent.com/sgosline/NEXUS/master/bin/rna-seq-workflow/steps/breakdownfile-tool.cwl
     in:
        fileName: get-fv/query_result
     out: [specIds,mate1files,mate2files]
