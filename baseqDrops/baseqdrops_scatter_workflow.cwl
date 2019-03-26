@@ -48,14 +48,6 @@ steps:
   out: 
   - dir
 
-- id: get-clinical
-  run: https://raw.githubusercontent.com/Sage-Bionetworks/synapse-client-cwl-tools/master/synapse-query-tool.cwl
-  in:
-    synapse_config: synapse_config
-    query: sample_query
-  out:
-  - query_result
-
 - id: get-fv
   run: https://raw.githubusercontent.com/Sage-Bionetworks/synapse-client-cwl-tools/master/synapse-query-tool.cwl
   in:
@@ -90,3 +82,13 @@ steps:
   out:
   - umi_file
   - reads_file
+
+
+
+#- id: get-clinical
+#  run: https://raw.githubusercontent.com/Sage-Bionetworks/synapse-client-cwl-tools/master/synapse-query-tool.cwl
+#  in:
+#    synapse_config: synapse_config
+#    query: sample_query
+#  out:
+#  - query_result
