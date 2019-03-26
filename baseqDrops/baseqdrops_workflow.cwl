@@ -6,8 +6,8 @@ class: Workflow
 
 inputs:
 
-  p1_fastq_id: string
-  p2_fastq_id: string
+  p1_fastq_id_file: File
+  p2_fastq_id_file: File
   index_dir: Directory
   sample_name: string
   synapse_config: File
@@ -18,43 +18,55 @@ outputs:
 
 - id: baseqdrops_dir
   type: Directory
-  outputSource: 
+  outputSource:
   - baseqdrops/baseqdrops_dir
 
-- id: reads_file 
+- id: reads_file
   type: File
-  outputSource: 
+  outputSource:
   - baseqdrops/reads_file
 
-- id: umi_file 
+- id: umi_file
   type: File
-  outputSource: 
+  outputSource:
   - baseqdrops/umi_file
 
 
 steps:
 
+- id: get_p1_file
+  run: https://raw.githubusercontent.com/sgosline/NEXUS/master/bin/rna-seq-workflow/steps/out-to-array-tool.cwl
+  in:
+    datafile: p1_fastq_id_file
+  out:
+    [anyarray]
+
 - id: download_p1_fastq
   run: https://raw.githubusercontent.com/Sage-Bionetworks/synapse-client-cwl-tools/master/synapse-get-tool.cwl
   in:
-    synapseid: p1_fastq_id
+    synapseid: get_p1_file/anyarray
     synapse_config: synapse_config
   out:
   - filepath
-
+- id: get_p2_file
+  run: https://raw.githubusercontent.com/sgosline/NEXUS/master/bin/rna-seq-workflow/steps/out-to-array-tool.cwl
+  in:
+    datafile: p2_fastq_id_file
+  out:
+    [anyarray]
 - id: download_p2_fastq
   run: https://raw.githubusercontent.com/Sage-Bionetworks/synapse-client-cwl-tools/master/synapse-get-tool.cwl
   in:
-    synapseid: p2_fastq_id
+    synapseid: get_p2_file/anyarray
     synapse_config: synapse_config
-  out: 
+  out:
   - filepath
 
 - id: unzip_p1_fastq
   run: steps/unzip_file_conditionally.cwl
   in:
     file: download_p1_fastq/filepath
-  out: 
+  out:
   - unziped_file
 
 - id: unzip_p2_fastq
@@ -73,8 +85,7 @@ steps:
     fastq2: unzip_p2_fastq/unziped_file
     reference_genome: reference_genome
     protocol: protocol
-  out: 
+  out:
   - baseqdrops_dir
   - reads_file
   - umi_file
-
