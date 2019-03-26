@@ -63,17 +63,16 @@ inputs:
 outputs:
 
 - id: umi_file
-  type: File
+  type: File?
   outputBinding: 
-    glob: $(inputs.sample_name + "/Result.UMIs." + "test.txt")
+    glob: $(inputs.sample_name + "/Result.UMIs." + inputs.sample_name + ".txt")
 
 - id: reads_file
-  type: File
+  type: File?
   outputBinding: 
-    glob: $(inputs.sample_name + "/Result.Reads." + "test.txt")
+    glob: $(inputs.sample_name + "/Result.Reads." + inputs.sample_name + ".txt")
 
-- id: basedrops_dir
-  doc: baseqDrops output folder
+- id: baseqdrops_dir
   type: Directory
   outputBinding: 
     glob: $(inputs.sample_name)

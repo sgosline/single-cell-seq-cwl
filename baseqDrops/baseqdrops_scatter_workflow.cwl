@@ -17,10 +17,20 @@ inputs:
 
 outputs:
 
-  baseq_dir: 
+  baseqdrops_dir_array: 
     type: Directory[]
     outputSource: 
-    - baseqdrop_workflow/basedrops_dir
+    - baseqdrop_workflow/baseqdrops_dir
+
+  reads_file_array: 
+    type: File[]
+    outputSource: 
+    - baseqdrop_workflow/reads_file
+
+  umi_file_array: 
+    type: File[]
+    outputSource: 
+    - baseqdrop_workflow/umi_file
 
 requirements:
   - class: SubworkflowFeatureRequirement
@@ -59,7 +69,7 @@ steps:
     - fastq2
     scatterMethod: dotproduct 
     out:
-    - basedrops_dir
+    - baseqdrops_dir
     - umi_file
     - reads_file
 

@@ -16,10 +16,21 @@ inputs:
 
 outputs:
 
-  baseq_dir: 
+  baseqdrops_dir: 
     type: Directory
     outputSource: 
-    - baseqdrops/basedrops_dir
+    - baseqdrops/baseqdrops_dir
+
+  reads_file: 
+    type: File
+    outputSource: 
+    - baseqdrops/reads_file
+
+  umi_file: 
+    type: File
+    outputSource: 
+    - baseqdrops/umi_file
+
 
 steps:
 
@@ -58,7 +69,10 @@ steps:
       fastq2: unzip_p2_fastq/unziped_file
       reference_genome: reference_genome
       protocol: protocol
-    out: [basedrops_dir]
+    out: 
+    - baseqdrops_dir
+    - reads_file
+    - umi_file
 
 
 
