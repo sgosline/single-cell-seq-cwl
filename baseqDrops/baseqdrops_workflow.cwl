@@ -16,68 +16,65 @@ inputs:
 
 outputs:
 
-  baseqdrops_dir: 
-    type: Directory
-    outputSource: 
-    - baseqdrops/baseqdrops_dir
+- id: baseqdrops_dir
+  type: Directory
+  outputSource: 
+  - baseqdrops/baseqdrops_dir
 
-  reads_file: 
-    type: File
-    outputSource: 
-    - baseqdrops/reads_file
+- id: reads_file 
+  type: File
+  outputSource: 
+  - baseqdrops/reads_file
 
-  umi_file: 
-    type: File
-    outputSource: 
-    - baseqdrops/umi_file
+- id: umi_file 
+  type: File
+  outputSource: 
+  - baseqdrops/umi_file
 
 
 steps:
 
-  download_p1_fastq:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/synapse-client-cwl-tools/master/synapse-get-tool.cwl
-    in:
-      synapseid: p1_fastq_id
-      synapse_config: synapse_config
-    out: [filepath]
+- id: download_p1_fastq
+  run: https://raw.githubusercontent.com/Sage-Bionetworks/synapse-client-cwl-tools/master/synapse-get-tool.cwl
+  in:
+    synapseid: p1_fastq_id
+    synapse_config: synapse_config
+  out:
+  - filepath
 
-  download_p2_fastq:
-    run: https://raw.githubusercontent.com/Sage-Bionetworks/synapse-client-cwl-tools/master/synapse-get-tool.cwl
-    in:
-      synapseid: p2_fastq_id
-      synapse_config: synapse_config
-    out: [filepath]
+- id: download_p2_fastq
+  run: https://raw.githubusercontent.com/Sage-Bionetworks/synapse-client-cwl-tools/master/synapse-get-tool.cwl
+  in:
+    synapseid: p2_fastq_id
+    synapse_config: synapse_config
+  out: 
+  - filepath
 
-  unzip_p1_fastq:
-    run: steps/unzip_file_conditionally.cwl
-    in:
-      file: download_p1_fastq/filepath
-    out: [unziped_file]
+- id: unzip_p1_fastq
+  run: steps/unzip_file_conditionally.cwl
+  in:
+    file: download_p1_fastq/filepath
+  out: 
+  - unziped_file
 
-  unzip_p2_fastq:
-    run: steps/unzip_file_conditionally.cwl
-    in:
-      file: download_p2_fastq/filepath
-    out: [unziped_file]
+- id: unzip_p2_fastq
+  run: steps/unzip_file_conditionally.cwl
+  in:
+    file: download_p2_fastq/filepath
+  out:
+  - unziped_file
 
-  baseqdrops:
-    run: steps/baseqdrops.cwl
-    in:
-      index_dir: index_dir
-      sample_name: sample_name
-      fastq1: unzip_p1_fastq/unziped_file
-      fastq2: unzip_p2_fastq/unziped_file
-      reference_genome: reference_genome
-      protocol: protocol
-    out: 
-    - baseqdrops_dir
-    - reads_file
-    - umi_file
-
-
-
-
-  
-
-    
+- id: baseqdrops
+  run: steps/baseqdrops.cwl
+  in:
+    index_dir: index_dir
+    sample_name: sample_name
+    fastq1: unzip_p1_fastq/unziped_file
+    fastq2: unzip_p2_fastq/unziped_file
+    reference_genome: reference_genome
+    protocol: protocol
+  out: 
+  - baseqdrops_dir
+  - reads_file
+  - umi_file
 

@@ -12,8 +12,6 @@ arguments:
 - --config
 - config_drops.ini
 
-
-
 requirements:
   - class: InlineJavascriptRequirement
   - class: InitialWorkDirRequirement
@@ -25,6 +23,7 @@ requirements:
           star = STAR
           whitelistDir = /usr/app/baseqDrops/whitelist
           cellranger_ref_hg38 = $(inputs.index_dir.path)
+
 hints:
   DockerRequirement:
     dockerPull: guoxindi/baseqdrops
@@ -63,12 +62,12 @@ inputs:
 outputs:
 
 - id: umi_file
-  type: File?
+  type: File
   outputBinding: 
     glob: $(inputs.sample_name + "/Result.UMIs." + inputs.sample_name + ".txt")
 
 - id: reads_file
-  type: File?
+  type: File
   outputBinding: 
     glob: $(inputs.sample_name + "/Result.Reads." + inputs.sample_name + ".txt")
 
