@@ -7,6 +7,7 @@ class: Workflow
 inputs:
 
   idquery: string
+  sample_query: string
   synapse_config: File
   index_dir: Directory
   index_id:
@@ -27,11 +28,24 @@ outputs:
   outputSource: 
   - baseqdrop_workflow/umi_file
 
+- id: res
+  type: File
+  outputSource: 
+  - get-clinical/query_result
+
 requirements:
   - class: SubworkflowFeatureRequirement
   - class: ScatterFeatureRequirement
 
 steps:
+
+- id: get-clinical
+  run: https://raw.githubusercontent.com/Sage-Bionetworks/synapse-client-cwl-tools/master/synapse-query-tool.cwl
+  in:
+    synapse_config: synapse_config
+    query: sample_query
+  out:
+  - query_result
 
 - id: get-fv
   run: https://raw.githubusercontent.com/Sage-Bionetworks/synapse-client-cwl-tools/master/synapse-query-tool.cwl
